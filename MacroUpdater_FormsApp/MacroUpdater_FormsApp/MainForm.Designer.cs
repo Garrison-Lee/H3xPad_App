@@ -40,6 +40,7 @@ namespace MacroUpdater_FormsApp
             this.userLog = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.title = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panelUserInput.SuspendLayout();
             this.SuspendLayout();
@@ -93,6 +94,7 @@ namespace MacroUpdater_FormsApp
             // 
             // panelUserInput
             // 
+            this.panelUserInput.Controls.Add(this.button2);
             this.panelUserInput.Controls.Add(this.button1);
             this.panelUserInput.Controls.Add(this.label1);
             this.panelUserInput.Controls.Add(this.pressTextBox);
@@ -110,9 +112,9 @@ namespace MacroUpdater_FormsApp
             // 
             this.button1.Location = new System.Drawing.Point(33, 130);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(127, 23);
             this.button1.TabIndex = 6;
-            this.button1.Text = "button1";
+            this.button1.Text = "Log Contents";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -182,6 +184,16 @@ namespace MacroUpdater_FormsApp
             this.title.Text = "Hello, Mom! \r\nWhat would you like your MacroPad to output?";
             this.title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(33, 175);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(127, 23);
+            this.button2.TabIndex = 7;
+            this.button2.Text = "Ping";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,6 +230,7 @@ namespace MacroUpdater_FormsApp
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label title;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

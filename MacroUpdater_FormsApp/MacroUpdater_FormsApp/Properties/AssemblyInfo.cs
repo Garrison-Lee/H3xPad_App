@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MacroUpdater_FormsApp")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("MacroPad Updater")]
+[assembly: AssemblyDescription("Simple app to update your Christmas MacroPad!")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MacroUpdater_FormsApp")]
+[assembly: AssemblyCompany("H3xPop")]
+[assembly: AssemblyProduct("MacroPad Updater")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

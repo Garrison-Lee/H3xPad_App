@@ -3,14 +3,13 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
+using System.Management;
 
 namespace MacroUpdater_FormsApp
 {
     public partial class MainForm : Form
     {
-        public const string PORT_NAME = "COM7";
+        public const string PORT_NAME = "COM3";
         private SerialPort _port;
 
         // For serial communication protocol with our board XD
@@ -18,6 +17,9 @@ namespace MacroUpdater_FormsApp
         public const string GET = "GET";
         public const string PUT = "PUT";
         public const string LOG = "LOG";
+        public const string READY = "RDY";
+        public const string ERROR = "ERR";
+        public const string OKK = "OKK";
         public const string TAP_MACRO = "TAP.TXT";
         public const string PRESS_MACRO = "PRESS.TXT";
 
@@ -38,8 +40,13 @@ namespace MacroUpdater_FormsApp
             pressTextBox.AutoSize = false;
             pressTextBox.Height = 28;
 
-            OpenSerialPortConnection();
-            _ = ReadMacrosFromCardAsync();
+            // TODO: Screw this ListAll, just scan and auto-pick for aunty
+            SerialUtility.ListAllCOMPorts();
+            if (OpenSerialPortConnection())
+            {
+                userLog.Text = "Loading Macros from MacroPad...";
+                _ = ReadMacrosFromCardAsync();
+            }
         }
 
         private async Task ReadMacrosFromCardAsync()
@@ -51,7 +58,7 @@ namespace MacroUpdater_FormsApp
             }
 
             _awaitingResponse = true;
-            SendToPort($"{GET}{HEXLIMITER}{TAP_MACRO}");
+            SendToPort($"{HEXLIMITER}{GET}{HEXLIMITER}{TAP_MACRO}{HEXLIMITER}");
             while (_awaitingResponse)
             {
                 // No big rush, 10x a second
@@ -60,9 +67,10 @@ namespace MacroUpdater_FormsApp
             // As soon as we are done _awaitingResponse, _lastResponse is what we want!
             _savedTapMacro = _lastResponse;
             tapTextBox.Text = _lastResponse;
+            tapTextBox.ForeColor = _lastResponse == ERROR ? Color.Red : Style.Blue;
 
             _awaitingResponse = true;
-            SendToPort($"{GET}{HEXLIMITER}{PRESS_MACRO}");
+            SendToPort($"{HEXLIMITER}{GET}{HEXLIMITER}{PRESS_MACRO}{HEXLIMITER}");
             while (_awaitingResponse)
             {
                 // No big rush, 10x a second
@@ -71,6 +79,9 @@ namespace MacroUpdater_FormsApp
             // As soon as we are done _awaitingResponse, _lastResponse is what we want!
             _savedPressMacro = _lastResponse;
             pressTextBox.Text = _lastResponse;
+            pressTextBox.ForeColor = _lastResponse == ERROR ? Color.Red : Style.Blue;
+
+            userLog.Text = "Displayed macros are up-to-date!";
         }
 
         private async Task UpdateMacrosAsync()
@@ -81,24 +92,32 @@ namespace MacroUpdater_FormsApp
                 return;
             }
 
+            bool tapFailed = false;
+            bool pressFailed = false;
+
             _awaitingResponse = true;
-            SendToPort($"{PUT}{HEXLIMITER}{TAP_MACRO}{HEXLIMITER}{tapTextBox.Text}");
+            userLog.Text = "Saving macros to MacroPad...";
+            SendToPort($"{HEXLIMITER}{PUT}{HEXLIMITER}{TAP_MACRO}{HEXLIMITER}{tapTextBox.Text}{HEXLIMITER}");
             while (_awaitingResponse)
             {
                 // polling at 10x/sec
                 await Task.Delay(100);
             }
+            if (tapFailed = _lastResponse == ERROR)
+                Console.WriteLine($"C: ERROR: Failed to save shortPress Macro!");
 
             // Once we are no longer awaiting response we can move on to the next file
             _awaitingResponse = true;
-            SendToPort($"{PUT}{HEXLIMITER}{PRESS_MACRO}{HEXLIMITER}{pressTextBox.Text}");
+            SendToPort($"{HEXLIMITER}{PUT}{HEXLIMITER}{PRESS_MACRO}{HEXLIMITER}{pressTextBox.Text}{HEXLIMITER}");
             while (_awaitingResponse)
             {
                 // polling at 10x/sec
                 await Task.Delay(100);
             }
+            if (pressFailed = _lastResponse == ERROR)
+                Console.WriteLine($"C: ERROR: Failed to save longPress Macro!");
 
-            // A form of error checking make sure we actually read back the right thing
+            userLog.Text = $"{(tapFailed ? "FAILED to save shortPress Macro" : "shortPress Saved")} - {(pressFailed ? "FAILED to save longPress Macro" : "longPress Saved")}";
             _ = ReadMacrosFromCardAsync();
         }
 
@@ -106,17 +125,25 @@ namespace MacroUpdater_FormsApp
         {
             if (_awaitingResponse)
             {
-                Console.WriteLine($"ERROR: Attempted to start a SerialCommunication ({nameof(PrintCardContentsAsync)}) job while another was going. Ignoring this request.");
+                Console.WriteLine($"C: ERROR: Attempted to start a SerialCommunication ({nameof(PrintCardContentsAsync)}) job while another was going. Ignoring this request.");
                 return;
             }
 
             _awaitingResponse = true;
-            SendToPort($"{LOG}{HEXLIMITER}");
+            SendToPort($"{HEXLIMITER}{LOG}{HEXLIMITER}");
             while (_awaitingResponse)
             {
                 // polling at 10x/sec
                 await Task.Delay(100);
             }
+        }
+
+        private async Task PingBoard()
+        {
+            // Unlike the others it does not check to see if it's going to mess anything up
+            //  use this as a debugging type of thing
+            _awaitingResponse = true;
+            SendToPort($"{HEXLIMITER}{READY}{HEXLIMITER}");
         }
 
         private void SendToPort(string msg)
@@ -126,45 +153,67 @@ namespace MacroUpdater_FormsApp
                 userLog.Text = $"Failed to update, port {PORT_NAME} is closed!";
                 return;
             }
-            Console.WriteLine($"Writing {msg} to the serial port!");
+            Console.WriteLine($"C: Writing {msg} to the serial port!");
             _port.WriteLine(msg);
         }
 
-        private void OpenSerialPortConnection()
+        
+
+        private string buffer = "";
+        private void OnSerialPortDataReceived(object sender, SerialDataReceivedEventArgs args)
         {
-            // Make sure you configure the microcontroller to also use this
-            // serial port name (I think idk I'm new at this)
-            _port = new SerialPort(PORT_NAME, 9600);
+            buffer = _port.ReadExisting();
+            Console.WriteLine($"C: RAW CIPO: {buffer}");
+            if (!buffer.EndsWith("\n"))
+                return;
+
+            // Parse things only when we have an entire line at a time
+            if (_awaitingResponse)
+            {
+                if (buffer.StartsWith(HEXLIMITER))
+                {
+                    int closeIndex = buffer.LastIndexOf(HEXLIMITER);
+                    _lastResponse = buffer.Substring(HEXLIMITER.Length, closeIndex - HEXLIMITER.Length);
+                    Console.WriteLine($"C: Response Detected: {_lastResponse}");
+                    _awaitingResponse = false;
+                }
+            }
+
+            // One entire line dealt with at a time
+            buffer = "";
+        }
+
+        #region START_UP_SHUT_DOWN
+        // Creates a SerialPort object on a specific COM port, configures the port
+        //  and subscribes to the port's OnDataReceived event
+        private bool OpenSerialPortConnection()
+        {
+            // TODO: Scan Ports to find and match the board, hardcoded port rn
+            _port = new SerialPort(PORT_NAME, 9600)
+            {
+                // Configured to match the way the arduino sends its shit
+                DtrEnable = true,
+                RtsEnable = true,
+                DataBits = 8,
+                StopBits = StopBits.One
+            };
             _port.DataReceived += OnSerialPortDataReceived;
 
             try
             {
                 _port.Open();
-                this.FormClosing += CloseSerialPortConnection;
-                Console.WriteLine($"Opened port {PORT_NAME}");
+                FormClosing += CloseSerialPortConnection;
+                Console.WriteLine($"Opened port {_port.PortName}");
                 userLog.Text = "Connected to MacroPad";
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                // TODO: Instructions for aunty
+                userLog.Text = "Failed to connect to MacroPad...";
+                return false;
             }
-        }
-
-        private void OnSerialPortDataReceived(object sender, SerialDataReceivedEventArgs args)
-        {
-            string line = _port.ReadLine();
-            if (_awaitingResponse)
-            {
-                if (line.StartsWith(HEXLIMITER))
-                {
-                    int closeIndex = line.LastIndexOf(HEXLIMITER);
-                    _lastResponse = line.Substring(HEXLIMITER.Length, closeIndex - HEXLIMITER.Length);
-                    Console.WriteLine($"Response Detected: {_lastResponse}");
-                    _awaitingResponse = false;
-                }
-            }
-
-            Console.WriteLine($"board: {line}");
         }
 
         private void CloseSerialPortConnection(object sender, FormClosingEventArgs e)
@@ -172,7 +221,9 @@ namespace MacroUpdater_FormsApp
             _port.Close();
             Console.WriteLine($"Closed port {PORT_NAME}");
         }
+        #endregion
 
+        #region FORM_EVENTS
         private void UpdateButton_Click(object sender, System.EventArgs args)
         {
             _ = UpdateMacrosAsync();
@@ -208,5 +259,11 @@ namespace MacroUpdater_FormsApp
         {
             _ = PrintCardContentsAsync();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            _ = PingBoard();
+        }
+        #endregion
     }
 }
