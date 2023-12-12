@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogStates.cs" />
     <Compile Include="SerialUtility.cs" />
     <Compile Include="Style.cs" />
     <Compile Include="MainForm.cs">
