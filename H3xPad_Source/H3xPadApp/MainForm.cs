@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading.Tasks;
-using System.Management;
 
 namespace MacroUpdater_FormsApp
 {

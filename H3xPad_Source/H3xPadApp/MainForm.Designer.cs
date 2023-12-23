@@ -160,7 +160,7 @@ namespace MacroUpdater_FormsApp
             this.label1.Location = new System.Drawing.Point(200, 13);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 16);
+            this.label1.Size = new System.Drawing.Size(91, 16);
             this.label1.TabIndex = 3;
             this.label1.Text = "Short Press:";
             // 
@@ -191,7 +191,7 @@ namespace MacroUpdater_FormsApp
             this.label2.Location = new System.Drawing.Point(200, 87);
             this.label2.Margin = new System.Windows.Forms.Padding(0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 16);
+            this.label2.Size = new System.Drawing.Size(84, 16);
             this.label2.TabIndex = 5;
             this.label2.Text = "Long Press:";
             // 
@@ -254,7 +254,7 @@ namespace MacroUpdater_FormsApp
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "MacroPad Updater";
+            this.Text = "H3xPad Updater";
             this.panel1.ResumeLayout(false);
             this.panelUserInput.ResumeLayout(false);
             this.panelUserInput.PerformLayout();
