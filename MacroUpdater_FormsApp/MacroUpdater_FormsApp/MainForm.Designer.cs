@@ -29,18 +29,22 @@ namespace MacroUpdater_FormsApp
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.updateButton = new System.Windows.Forms.Button();
             this.tapTextBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.userLog = new System.Windows.Forms.Label();
             this.panelUserInput = new System.Windows.Forms.Panel();
+            this.pressSubmitToggle = new System.Windows.Forms.CheckBox();
+            this.tapSubmitToggle = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pressTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.title = new System.Windows.Forms.Label();
             this.hiMom = new System.Windows.Forms.Label();
             this.signature = new System.Windows.Forms.Label();
+            this.submitTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.panelUserInput.SuspendLayout();
             this.SuspendLayout();
@@ -81,7 +85,7 @@ namespace MacroUpdater_FormsApp
             this.tapTextBox.Text = "loading from MacroPad...";
             this.tapTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tapTextBox.WordWrap = false;
-            this.tapTextBox.TextChanged += new System.EventHandler(this.tapTextBox_TextChanged);
+            this.tapTextBox.TextChanged += new System.EventHandler(this.TapTextBox_TextChanged);
             // 
             // panel1
             // 
@@ -107,6 +111,8 @@ namespace MacroUpdater_FormsApp
             // 
             // panelUserInput
             // 
+            this.panelUserInput.Controls.Add(this.pressSubmitToggle);
+            this.panelUserInput.Controls.Add(this.tapSubmitToggle);
             this.panelUserInput.Controls.Add(this.label1);
             this.panelUserInput.Controls.Add(this.pressTextBox);
             this.panelUserInput.Controls.Add(this.label2);
@@ -117,6 +123,34 @@ namespace MacroUpdater_FormsApp
             this.panelUserInput.Padding = new System.Windows.Forms.Padding(200, 40, 200, 0);
             this.panelUserInput.Size = new System.Drawing.Size(784, 167);
             this.panelUserInput.TabIndex = 3;
+            // 
+            // pressSubmitToggle
+            // 
+            this.pressSubmitToggle.AutoSize = true;
+            this.pressSubmitToggle.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.pressSubmitToggle.Font = new System.Drawing.Font("Cascadia Code SemiBold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pressSubmitToggle.Location = new System.Drawing.Point(601, 97);
+            this.pressSubmitToggle.Name = "pressSubmitToggle";
+            this.pressSubmitToggle.Size = new System.Drawing.Size(122, 39);
+            this.pressSubmitToggle.TabIndex = 7;
+            this.pressSubmitToggle.Text = "Press Enter?";
+            this.submitTooltip.SetToolTip(this.pressSubmitToggle, "If checked, the H3xPad will send an \'Enter\' keystroke after finishing the macro");
+            this.pressSubmitToggle.UseVisualStyleBackColor = true;
+            this.pressSubmitToggle.CheckedChanged += new System.EventHandler(this.PressSubmitToggle_CheckedChanged);
+            // 
+            // tapSubmitToggle
+            // 
+            this.tapSubmitToggle.AutoSize = true;
+            this.tapSubmitToggle.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tapSubmitToggle.Font = new System.Drawing.Font("Cascadia Code SemiBold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tapSubmitToggle.Location = new System.Drawing.Point(601, 26);
+            this.tapSubmitToggle.Name = "tapSubmitToggle";
+            this.tapSubmitToggle.Size = new System.Drawing.Size(122, 39);
+            this.tapSubmitToggle.TabIndex = 6;
+            this.tapSubmitToggle.Text = "Press Enter?";
+            this.submitTooltip.SetToolTip(this.tapSubmitToggle, "If checked, the H3xPad will send an \'Enter\' keystroke after finishing the macro");
+            this.tapSubmitToggle.UseVisualStyleBackColor = true;
+            this.tapSubmitToggle.CheckedChanged += new System.EventHandler(this.TapSubmitToggle_CheckedChanged);
             // 
             // label1
             // 
@@ -147,7 +181,7 @@ namespace MacroUpdater_FormsApp
             this.pressTextBox.Text = "loading from MacroPad...";
             this.pressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.pressTextBox.WordWrap = false;
-            this.pressTextBox.TextChanged += new System.EventHandler(this.pressTextBox_TextChanged);
+            this.pressTextBox.TextChanged += new System.EventHandler(this.PressTextBox_TextChanged);
             // 
             // label2
             // 
@@ -170,7 +204,7 @@ namespace MacroUpdater_FormsApp
             this.title.Name = "title";
             this.title.Size = new System.Drawing.Size(784, 114);
             this.title.TabIndex = 1;
-            this.title.Text = "MacroPad Updater";
+            this.title.Text = "H3xPad Updater";
             this.title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // hiMom
@@ -186,7 +220,7 @@ namespace MacroUpdater_FormsApp
             // signature
             // 
             this.signature.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.signature.Font = new System.Drawing.Font("ROG Fonts", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.signature.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.signature.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(45)))));
             this.signature.Location = new System.Drawing.Point(0, 441);
             this.signature.Name = "signature";
@@ -194,6 +228,13 @@ namespace MacroUpdater_FormsApp
             this.signature.TabIndex = 5;
             this.signature.Text = "H3xPop";
             this.signature.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // submitTooltip
+            // 
+            this.submitTooltip.BackColor = System.Drawing.Color.Black;
+            this.submitTooltip.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.submitTooltip.IsBalloon = true;
+            this.submitTooltip.ToolTipTitle = "Submit Option";
             // 
             // MainForm
             // 
@@ -234,6 +275,9 @@ namespace MacroUpdater_FormsApp
         private System.Windows.Forms.Label title;
         private System.Windows.Forms.Label hiMom;
         private System.Windows.Forms.Label signature;
+        private System.Windows.Forms.CheckBox tapSubmitToggle;
+        private System.Windows.Forms.ToolTip submitTooltip;
+        private System.Windows.Forms.CheckBox pressSubmitToggle;
     }
 }
 

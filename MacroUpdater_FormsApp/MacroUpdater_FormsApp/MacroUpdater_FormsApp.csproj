@@ -60,10 +60,11 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>D80684A03CFF2A80BC62B5A46E72C40A14D7E6E9</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>FE0196130DE81FEF8D5865AF2EC9120EE43A6FC7</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>MacroUpdater_FormsApp_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
