@@ -14,7 +14,7 @@
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>C:\Users\gmlee\Downloads\</PublishUrl>
+    <PublishUrl>D:\_PROJECTS\GitHub\H3xPad_App\H3xPad_Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -28,7 +28,7 @@
     <ErrorReportUrl>https://www.garrisonlee.dev</ErrorReportUrl>
     <ProductName>H3xPad Updater</ProductName>
     <PublisherName>H3xPop</PublisherName>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -74,6 +74,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>H3xPopIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
