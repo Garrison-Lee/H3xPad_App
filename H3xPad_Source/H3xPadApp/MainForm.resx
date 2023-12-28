@@ -118,8 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="submitTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>354, 25</value>
+    <value>462, 14</value>
   </metadata>
+  <metadata name="pressTypesTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>305, 12</value>
+  </metadata>
+  <metadata name="comTooltip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>196, 28</value>
+  </metadata>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value>When you plug in a USB device, the device and your computer decide on a COM port. 
+This could be COM1-COM99. For tradeoff-reasons related to security, you'll have to manually set this.
+Try COM 3, 5, &amp; 7 first.
+
+If that does not work, it is very easy to determine which COM port your H3xPad is using:
+     1. Search for "Device Manager" in the Windows search bar
+     2. Expand the "Ports (COM &amp; LPT)" option
+     3. There should be an entry like, "Leonardo (COM&lt;X&gt;)"
+     4. Plug that number into ths field and you're good to go!
+
+Alternatively, call Garrison and say, "Code 'Can't-Find-The-Hole'"
+
+Sorry for the hassle but remember none of this is required for normal use, only for updating the
+ macros when your company forces you to do so ;)</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>146</value>
   </metadata>

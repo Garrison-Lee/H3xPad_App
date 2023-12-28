@@ -45,6 +45,10 @@ namespace MacroUpdater_FormsApp
             this.hiMom = new System.Windows.Forms.Label();
             this.signature = new System.Windows.Forms.Label();
             this.submitTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.comTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.pressTypesTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.comInputField = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panelUserInput.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +82,7 @@ namespace MacroUpdater_FormsApp
             this.tapTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.tapTextBox.MaximumSize = new System.Drawing.Size(384, 36);
             this.tapTextBox.MaxLength = 512;
-            this.tapTextBox.MinimumSize = new System.Drawing.Size(384, 30);
+            this.tapTextBox.MinimumSize = new System.Drawing.Size(384, 20);
             this.tapTextBox.Name = "tapTextBox";
             this.tapTextBox.Size = new System.Drawing.Size(384, 19);
             this.tapTextBox.TabIndex = 1;
@@ -163,6 +167,7 @@ namespace MacroUpdater_FormsApp
             this.label1.Size = new System.Drawing.Size(91, 16);
             this.label1.TabIndex = 3;
             this.label1.Text = "Short Press:";
+            this.pressTypesTooltip.SetToolTip(this.label1, "This macro will be sent when you quickly tap your H3xPad");
             // 
             // pressTextBox
             // 
@@ -174,7 +179,7 @@ namespace MacroUpdater_FormsApp
             this.pressTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.pressTextBox.MaximumSize = new System.Drawing.Size(384, 36);
             this.pressTextBox.MaxLength = 512;
-            this.pressTextBox.MinimumSize = new System.Drawing.Size(384, 30);
+            this.pressTextBox.MinimumSize = new System.Drawing.Size(384, 20);
             this.pressTextBox.Name = "pressTextBox";
             this.pressTextBox.Size = new System.Drawing.Size(384, 19);
             this.pressTextBox.TabIndex = 4;
@@ -194,6 +199,7 @@ namespace MacroUpdater_FormsApp
             this.label2.Size = new System.Drawing.Size(84, 16);
             this.label2.TabIndex = 5;
             this.label2.Text = "Long Press:";
+            this.pressTypesTooltip.SetToolTip(this.label2, "This macro will be sent when you briefly press & hold your H3xPad");
             // 
             // title
             // 
@@ -236,12 +242,61 @@ namespace MacroUpdater_FormsApp
             this.submitTooltip.IsBalloon = true;
             this.submitTooltip.ToolTipTitle = "Submit Option";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Cascadia Code SemiBold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(2, 431);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 21);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "COM";
+            this.comTooltip.SetToolTip(this.label3, resources.GetString("label3.ToolTip"));
+            // 
+            // comTooltip
+            // 
+            this.comTooltip.AutoPopDelay = 7600;
+            this.comTooltip.BackColor = System.Drawing.Color.Black;
+            this.comTooltip.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.comTooltip.InitialDelay = 500;
+            this.comTooltip.IsBalloon = true;
+            this.comTooltip.ReshowDelay = 152;
+            this.comTooltip.ToolTipTitle = "WTF is a COM?";
+            // 
+            // pressTypesTooltip
+            // 
+            this.pressTypesTooltip.BackColor = System.Drawing.Color.Black;
+            this.pressTypesTooltip.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.pressTypesTooltip.IsBalloon = true;
+            this.pressTypesTooltip.ToolTipTitle = "Short vs Long Press";
+            // 
+            // comInputField
+            // 
+            this.comInputField.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(47)))), ((int)(((byte)(47)))));
+            this.comInputField.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.comInputField.Font = new System.Drawing.Font("Cascadia Code SemiBold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comInputField.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            this.comInputField.Location = new System.Drawing.Point(42, 431);
+            this.comInputField.Margin = new System.Windows.Forms.Padding(0);
+            this.comInputField.MaximumSize = new System.Drawing.Size(32, 24);
+            this.comInputField.MaxLength = 2;
+            this.comInputField.MinimumSize = new System.Drawing.Size(32, 20);
+            this.comInputField.Name = "comInputField";
+            this.comInputField.Size = new System.Drawing.Size(32, 19);
+            this.comInputField.TabIndex = 8;
+            this.comInputField.Text = "5";
+            this.comInputField.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.comInputField.WordWrap = false;
+            this.comInputField.TextChanged += new System.EventHandler(this.ComInputField_TextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(5)))), ((int)(((byte)(16)))), ((int)(((byte)(20)))));
             this.ClientSize = new System.Drawing.Size(784, 461);
+            this.Controls.Add(this.comInputField);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.signature);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelUserInput);
@@ -259,6 +314,7 @@ namespace MacroUpdater_FormsApp
             this.panelUserInput.ResumeLayout(false);
             this.panelUserInput.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -278,6 +334,10 @@ namespace MacroUpdater_FormsApp
         private System.Windows.Forms.CheckBox tapSubmitToggle;
         private System.Windows.Forms.ToolTip submitTooltip;
         private System.Windows.Forms.CheckBox pressSubmitToggle;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ToolTip comTooltip;
+        private System.Windows.Forms.ToolTip pressTypesTooltip;
+        private System.Windows.Forms.TextBox comInputField;
     }
 }
 

@@ -9,7 +9,8 @@ namespace MacroUpdater_FormsApp
 {
     public partial class MainForm : Form
     {
-        public const string PORT_NAME = "COM5";
+        public const string PORT_PREFIX = "COM";
+        private int _portNumber = 5;
         private SerialPort _port;
         private const long TIMEOUT = TimeSpan.TicksPerSecond * 10;
 
@@ -74,18 +75,18 @@ namespace MacroUpdater_FormsApp
         {
             InitializeComponent();
             tapTextBox.AutoSize = false;
-            tapTextBox.Height = 28;
+            tapTextBox.Height = 24;
             tapTextBox.Text = DEFAULT_MACRO;
             pressTextBox.AutoSize = false;
-            pressTextBox.Height = 28;
+            pressTextBox.Height = 24;
             pressTextBox.Text = DEFAULT_MACRO;
 
-            // TODO: Screw this ListAll, just scan and auto-pick for aunty
-            // TODO: This is going to be critical because the effing boards are lil' bitches
-            SerialUtility.ListAllCOMPorts();
-            ConnectToBoard();
+            comInputField.AutoSize = false;
+            comInputField.Height = 23;
+            comInputField.Leave += ComInputField_FocusLeft;
 
-            // TODO: SANITIZE user input
+            // SerialUtility.ListAllCOMPorts();
+            ConnectToBoard();
         }
 
         // Whether or not we are within a tag. i.e. if the board is still sending more
@@ -199,7 +200,7 @@ namespace MacroUpdater_FormsApp
         {
             if (!_port.IsOpen)
             {
-                TellUser($"Failure! Port {PORT_NAME} is closed!", LogStates.ERROR);
+                TellUser($"Failure! Port {PORT_PREFIX}{_portNumber} is closed!", LogStates.ERROR);
                 CloseSerialPortConnection();
                 return;
             }
@@ -285,7 +286,7 @@ namespace MacroUpdater_FormsApp
             //  we use these flags for user messages.
             bool tapSaved = false;
             bool pressSaved = false;
-            TellUser("Saving macros to MacroPad...");
+            TellUser("Saving macros to H3xPad...");
 
             string macro = tapTextBox.Text;
             if (tapSubmitToggle.Checked)
@@ -356,7 +357,7 @@ namespace MacroUpdater_FormsApp
                 CloseSerialPortConnection();
 
             // TODO: Scan Ports to find and match the board, hardcoded port rn
-            _port = new SerialPort(PORT_NAME, 9600)
+            _port = new SerialPort($"{PORT_PREFIX}{_portNumber}", 9600)
             {
                 // Configured to match the way the arduino sends its shit
                 DtrEnable = true,
@@ -372,7 +373,7 @@ namespace MacroUpdater_FormsApp
                 _port.Open();
                 _connected = true;
                 FormClosing += CloseSerialPortConnection;
-                TellUser("Loading Macros from MacroPad...");
+                TellUser("Loading Macros from H3xPad...");
                 updateButton.Text = "Update";
                 Console.WriteLine($"APP: Opened port {_port.PortName}");
             }
@@ -380,7 +381,7 @@ namespace MacroUpdater_FormsApp
             {
                 Console.WriteLine($"APP: {e}");
                 // TODO: Instructions for aunty
-                TellUser("Failed to connect to MacroPad...", LogStates.ERROR);
+                TellUser($"Failed to connect to a H3xPad on {PORT_PREFIX}{_portNumber}...", LogStates.ERROR);
                 _connected = false;
                 updateButton.Text = "Retry Connect";
                 return false;
@@ -443,10 +444,10 @@ namespace MacroUpdater_FormsApp
             _savedPressMacro = "";
             _savedTapMacro = "";
             _buffer = "";
-            TellUser("Not Connected to MacroPad...", LogStates.ERROR);
+            TellUser($"Not connected to a H3xPad on {PORT_PREFIX}{_portNumber}", LogStates.ERROR);
             updateButton.Text = "Retry Connect";
             EnableUI();
-            Console.WriteLine($"APP: Closed port {PORT_NAME}");
+            Console.WriteLine($"APP: Closed port {PORT_PREFIX}{_portNumber}");
         }
 
 
@@ -561,5 +562,22 @@ namespace MacroUpdater_FormsApp
             UpdateTextBoxStyle();
         }
         #endregion
+
+        private void ComInputField_TextChanged(object sender, EventArgs e)
+        {
+            if (int.TryParse(comInputField.Text, out int comNumber))
+            {
+                _portNumber = comNumber;
+            }
+        }
+
+
+        private void ComInputField_FocusLeft(object sender, EventArgs e)
+        {
+            if (!int.TryParse(comInputField.Text, out int _))
+            {
+                comInputField.Text = _portNumber.ToString();
+            }
+        }
     }
 }
